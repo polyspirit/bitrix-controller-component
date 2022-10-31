@@ -12,7 +12,10 @@ Then create some templates directories in your theme template directory.
 For example:
 `/local/templates/main/components/other/controller/news/`
 
-Then create **result_modifier.php** and **template.php** in the same directory.
+Then create **template.php** in the same directory.
+Create **result.php** or **result_modifier.php** for getting and modifying data.
+
+The difference between **result.php** and **result_modifier.php** is that **result.php** includes into **class.php** file and can be used in Bitrix Modify mode.
 
 ## How to include
 
@@ -39,7 +42,7 @@ $APPLICATION->IncludeComponent(
 );
 ```
 
-Then put the files with the same names as URL_TEMPLATES into template directory near the **result_modifier.php** and **template.php** files. There are **detail.php** and **section.php** in this case.
+Then put the files with the same names as URL_TEMPLATES into template directory near the **result_modifier.php**/**result.php** and **template.php** files. There are **detail.php** and **section.php** in this case.
 
 ## urlrewrite.php
 
@@ -102,4 +105,27 @@ foreach ($arResult['SECTION']['ITEMS'] as $newsItem) {
 
 ```php
 echo $arResult['ITEM']['NAME'];
+```
+
+## Bitrix Modify mode
+
+To enable this mode add to **result.php** IBLOCK_ID:
+
+```php
+$arResult['IBLOCK_ID'] = CURRENT_IBLOCK_ID;
+```
+
+And add this id attribute to parent html-tag in a template file.
+
+```php
+<div class="parent-container" id="<?php echo $this->GetEditAreaId($arResult['AREA_ID']); ?>">
+    ...
+</div>
+```
+
+Also you can add SECTION_ID and ELEMENT_ID if you need:
+
+```php
+$arResult['SECTION_ID'] = CURRENT_SECTION_ID;
+$arResult['ID'] = CURRENT_ELEMENT_ID;
 ```
